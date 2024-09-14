@@ -1,0 +1,109 @@
+Step 1: Set Up React Project
+npx create-react-app fast-finder-search
+cd fast-finder-search
+Step 2: JSON Data
+Create a data.json file in the src folder and add the provided country data.
+[
+  {
+    "country": "United States",
+    "capital": "Washington, D.C.",
+    "population": 331002651,
+    "official_language": "English",
+    "currency": "United States Dollar"
+  },
+  {
+    "country": "Canada",
+    "capital": "Ottawa",
+    "population": 37742154,
+    "official_language": ["English", "French"],
+    "currency": "Canadian Dollar"
+  },
+  ...
+]
+Step 3: Create React Components
+1. App.js
+Import and load the data into the app, and create the main search bar and results components.
+import React, { useState } from "react";
+import countryData from "./data.json";
+import "./App.css";
+
+function App() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredResults, setFilteredResults] = useState([]);
+
+  const handleSearch = (event) => {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+    if (term.length > 0) {
+      const results = countryData.filter(
+        (item) =>
+          item.country.toLowerCase().includes(term) ||
+          item.capital.toLowerCase().includes(term)
+      );
+      setFilteredResults(results);
+    } else {
+      setFilteredResults([]);
+    }
+  };
+
+  return (
+    <div className="App">
+      <h1>Country Finder</h1>
+      <input
+        type="text"
+        placeholder="Search by country or capital..."
+        value={searchTerm}
+        onChange={handleSearch}
+        className="search-bar"
+      />
+      <div className="suggestions">
+        {filteredResults.map((country, index) => (
+          <div key={index} className="suggestion-item">
+            <strong>{country.country}</strong> - {country.capital}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
+2. App.css
+Add some styles to make the search bar and suggestions more visually appealing
+.App {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.search-bar {
+  width: 300px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.suggestions {
+  margin-top: 10px;
+  text-align: left;
+  width: 300px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+Step 4: Run the App
+To run the app, use:
+npm start
